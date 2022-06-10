@@ -22,7 +22,17 @@ function validateId(req, res, next) {
         })
 }
 
+function postProject(req, res, next) {
+    const { id, name, description, completed } = req.body;
+    if (req.body) {
+        next()
+    } else {
+        res.status(400).json({ message: "Missing required fields" })
+    }
+}
+
 module.exports = {
     validateId,
-    count
+    count,
+    postProject
 }
