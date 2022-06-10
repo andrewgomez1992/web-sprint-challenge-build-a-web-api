@@ -1,7 +1,7 @@
 // Write your "projects" router here!
 const express = require('express')
 const { get, insert, update, remove, getProjectActions } = require('./projects-model')
-const { validateId, count, postProject } = require('./projects-middleware')
+const { validateId, count, postProject, updateProjects } = require('./projects-middleware')
 
 const projectsRouter = express.Router()
 
@@ -36,6 +36,22 @@ projectsRouter.post('/', postProject, (req, res) => {
             res.status(400).json({ message: "cannot post for some reason" })
         })
 })
+
+projectsRouter.put("/:id", validateId, postProject, updateProjects, (req, res) => {
+    const { name, description, completed } = req.body
+    if (!name || !description || typeof completed !== 'boolean') {
+        res.status(400).json({ message: "project id doesnt exist" })
+    } else {
+        update(req.params.id, req.body)
+            .then((updateProject) => {
+                res.status(200).json(updateProject);
+            })
+            .catch(() => {
+                res.status(500).json({ message: "failed to update project" })
+            })
+    }
+}
+);
 
 
 module.exports = projectsRouter;

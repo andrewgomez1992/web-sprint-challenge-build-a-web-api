@@ -31,8 +31,18 @@ function postProject(req, res, next) {
     }
 }
 
+function updateProjects(req, res, next) {
+    const { completed } = req.body;
+    if (completed === undefined) {
+        res.status(400).json({ message: "Completed status is required!" });
+    } else {
+        next();
+    }
+}
+
 module.exports = {
     validateId,
     count,
-    postProject
+    postProject,
+    updateProjects
 }
