@@ -1,21 +1,24 @@
 const express = require('express');
 const server = express();
 const cors = require('cors');
+const morgan = require('morgan')
+const { logger, count } = require('./projects/projects-middleware');
 
+server.use(morgan("dev"))
 server.use(cors());
+server.use('/api/projects', logger)
+
 server.use(express.json());
 
-server.get('/', (req, res) => {
+const actionsRouter = require('./actions/actions-router');
+const projectsRouter = require('./projects/projects-router');
+
+server.get('/', logger, count, (req, res) => {
     res.send(`<h1>${process.env.MESSAGE}</h1>`)
 })
 
 server.use((err, req, res, next) => {
     res.status(500).json({ message: err.message, stack: err.stack })
 })
-
-// Configure your server here
-// Build your actions router in /api/actions/actions-router.js
-// Build your projects router in /api/projects/projects-router.js
-// Do NOT `server.listen()` inside this file!
 
 module.exports = server;
