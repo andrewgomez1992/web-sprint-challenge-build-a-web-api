@@ -23,7 +23,7 @@ function validateId(req, res, next) {
 }
 
 function postProject(req, res, next) {
-    const { id, name, description, completed } = req.body;
+    const { name, description } = req.body;
     if (req.body) {
         next()
     } else {
@@ -38,6 +38,10 @@ function updateProjects(req, res, next) {
     } else {
         next();
     }
+}
+
+function deleteProject(req, res, next) {
+
 }
 
 module.exports = {
