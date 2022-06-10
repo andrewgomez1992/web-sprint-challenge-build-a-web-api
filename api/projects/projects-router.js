@@ -1,16 +1,18 @@
 // Write your "projects" router here!
 const express = require('express')
+const { get, insert, update, remove, getProjectActions } = require('./projects-model')
+const { validateId } = require('./projects-middleware')
 
-const Projects = require('./projects-model');
+const projectsRouter = express.Router()
 
-const router = express.Router()
-
-router.get('/', (req, res) => {
-    Projects.get()
-        .then(result => {
-            res.json(Projects)
+projectsRouter.get('/', (req, res) => {
+    get()
+        .then(project => {
+            res.status(200).json(project)
         })
-        .catch(err => {
-            res.status(500).json({ message: "error" })
+        .catch(() => {
+            res.status(500).json({ message: 'failed to add projects' })
         })
 })
+
+module.exports = projectsRouter;
