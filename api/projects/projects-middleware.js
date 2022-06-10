@@ -1,5 +1,15 @@
 const { get } = require('./projects-model')
 
+function count(req, res, next) {
+    if (req.count == null) {
+        req.count = 0;
+    } else {
+        req.count++;
+    }
+    console.log(req.count);
+    next();
+}
+
 function validateId(req, res, next) {
     const { id } = req.params;
     get(id)
@@ -14,4 +24,5 @@ function validateId(req, res, next) {
 
 module.exports = {
     validateId,
+    count
 }
