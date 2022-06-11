@@ -24,7 +24,7 @@ projectsRouter.get('/:id', validateId, (req, res) => {
                 res.json(project)
             })
             .catch(() => {
-                res.status(500).json({ message: "Getting id not working" })
+                res.status(500).json({ message: "Get id not working" })
             })
     }
 });
