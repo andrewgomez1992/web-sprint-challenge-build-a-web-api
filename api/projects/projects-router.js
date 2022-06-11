@@ -1,7 +1,7 @@
 // Write your "projects" router here!
 const express = require('express')
 const { get, insert, update, remove, getProjectActions } = require('./projects-model')
-const { validateId } = require('./projects-middleware')
+const { validateProjectId } = require('./projects-middleware')
 
 const projectsRouter = express.Router()
 
@@ -15,7 +15,7 @@ projectsRouter.get('/', (req, res) => {
         })
 })
 
-projectsRouter.get('/:id', validateId, (req, res) => {
+projectsRouter.get('/:id', validateProjectId, (req, res) => {
     if (!req.params.id) {
         res.status(404).json({ message: 'Project id doesnt exist' })
     } else {
@@ -40,14 +40,14 @@ projectsRouter.post('/', (req, res) => {
         })
 })
 
-projectsRouter.put("/:id", validateId, (req, res) => {
+projectsRouter.put("/:id", validateProjectId, (req, res) => {
     const { name, description, completed } = req.body
     if (!name || !description || typeof completed !== 'boolean') {
         res.status(400).json({ message: 'Project id doesnt exist' })
     } else {
         update(req.params.id, req.body)
             .then((updateProject) => {
-                res.status(200).json(updateProject);
+                res.json(updateProject);
             })
             .catch(() => {
                 res.status(500).json({ message: 'Failed to update project' })
@@ -55,7 +55,7 @@ projectsRouter.put("/:id", validateId, (req, res) => {
     }
 });
 
-projectsRouter.delete('/:id', validateId, (req, res) => {
+projectsRouter.delete('/:id', validateProjectId, (req, res) => {
     remove(req.params.id)
         .then(deletedProject => {
             res.json(deletedProject)
@@ -65,7 +65,7 @@ projectsRouter.delete('/:id', validateId, (req, res) => {
         })
 })
 
-projectsRouter.get('/:id/actions', validateId, (req, res) => {
+projectsRouter.get('/:id/actions', validateProjectId, (req, res) => {
     getProjectActions(req.params.id)
         .then(action => {
             res.json(action)

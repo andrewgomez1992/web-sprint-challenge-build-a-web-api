@@ -1,6 +1,6 @@
 const express = require('express')
 const { get, insert, update, remove } = require('./actions-model')
-const { validateId } = require('./actions-middlware')
+const { validateActionsId, validateProjectId } = require('./actions-middlware')
 
 const actionsRouter = express.Router()
 
@@ -14,7 +14,7 @@ actionsRouter.get('/', (req, res) => {
         })
 })
 
-actionsRouter.get('/:id', validateId, (req, res) => {
+actionsRouter.get('/:id', validateActionsId, (req, res) => {
     if (!req.params.id) {
         res.status(404).json({ message: "Actions id doesnt exist" })
     } else {
@@ -27,5 +27,36 @@ actionsRouter.get('/:id', validateId, (req, res) => {
             })
     }
 })
+
+
+actionsRouter.post('/', (req, res) => {
+    const newAction = req.body
+    insert(newAction)
+        .then(action => {
+            res.status(201).json("New action created")
+        })
+        .catch(() => {
+            res.status(500).json({ message: "Cannot get action for some reason" })
+        })
+})
+
+
+// project id, description, and notes 
+actionsRouter.put('/:id', validateActionsId, validateProjectId, (req, res) => {
+    const { project_id, description, notes } = req.body
+    if (!project_id || !description || !notes) {
+        res.status(400).json({ message: "Missing required fields" })
+    } else {
+        update(req.params.id, req.body)
+            .then(updatedAction => {
+                res.status(201).json(updatedAction)
+            })
+            .catch(() => {
+                res.status(500).json({ message: 'Put not working' })
+            })
+    }
+})
+
+// actionsRouter.delete('/:id', (req, res))
 
 module.exports = actionsRouter;
