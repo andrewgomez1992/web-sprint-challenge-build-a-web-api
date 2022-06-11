@@ -57,6 +57,14 @@ actionsRouter.put('/:id', validateActionsId, validateProjectId, (req, res) => {
     }
 })
 
-// actionsRouter.delete('/:id', (req, res))
+actionsRouter.delete('/:id', validateActionsId, (req, res) => {
+    remove(req.params.id)
+        .then(deletedAction => {
+            res.json(deletedAction)
+        })
+        .catch(() => {
+            res.status(500).json({ message: "delete not working!!!" })
+        })
+})
 
 module.exports = actionsRouter;
