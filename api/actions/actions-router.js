@@ -30,14 +30,18 @@ actionsRouter.get('/:id', validateActionsId, (req, res) => {
 
 
 actionsRouter.post('/', (req, res) => {
-    const newAction = req.body
-    insert(newAction)
-        .then(action => {
-            res.status(201).json("New action created")
-        })
-        .catch(() => {
-            res.status(500).json({ message: "Cannot get action for some reason" })
-        })
+    const { project_id, description, notes } = req.body;
+    if (!project_id || !description || !notes) {
+        res.status(400).json({ message: "post not posting!" })
+    } else {
+        insert(req.body)
+            .then(action => {
+                res.status(201).json(action)
+            })
+            .catch(() => {
+                res.status(500).json({ message: "Cannot get action for some reason" })
+            })
+    }
 })
 
 
